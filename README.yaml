@@ -1,0 +1,54 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+
+# Name of this project
+name: Terraform AWS Backup
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: clouddrove/terraform-aws-backup
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v0.15-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    url: "LICENSE.md"
+
+#  description of this project
+description: |-
+  Terraform module to create backup backup resource on AWS.
+
+# extra content
+include:
+  - "terraform.md"
+
+# How to use this project
+# yamllint disable rule:line-length
+usage: |-
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+    ```hcl
+    module "backup" {
+        source             = "clouddrove/backup/aws"
+        version            = "0.15.0"
+        name               = "test"
+        environment        = "dev"
+        label_order        = ["name" , "environment"]
+        schedule           = "cron(0 12 * * ? *)"
+        start_window       = "60"
+        completion_window  = "120"
+        cold_storage_after = "30"
+        delete_after       = "180"
+        backup_resources   = [module.efs.arn ]
+
+}
+    ```
