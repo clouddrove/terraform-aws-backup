@@ -4,11 +4,11 @@
 
 
 <h1 align="center">
-    Terraform AWS Client VPN
+    Terraform AWS Backup
 </h1>
 
 <p align="center" style="font-size: 1.2rem;"> 
-    Terraform module to create Client VPN resource on AWS.
+    Terraform module to create backup backup resource on AWS.
      </p>
 
 <p align="center">
@@ -24,13 +24,13 @@
 </p>
 <p align="center">
 
-<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-aws-client-vpn'>
+<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-aws-backup'>
   <img title="Share on Facebook" src="https://user-images.githubusercontent.com/50652676/62817743-4f64cb80-bb59-11e9-90c7-b057252ded50.png" />
 </a>
-<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AWS+Client+VPN&url=https://github.com/clouddrove/terraform-aws-client-vpn'>
+<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AWS+Backup&url=https://github.com/clouddrove/terraform-aws-backup'>
   <img title="Share on LinkedIn" src="https://user-images.githubusercontent.com/50652676/62817742-4e339e80-bb59-11e9-87b9-a1f68cae1049.png" />
 </a>
-<a href='https://twitter.com/intent/tweet/?text=Terraform+AWS+Client+VPN&url=https://github.com/clouddrove/terraform-aws-client-vpn'>
+<a href='https://twitter.com/intent/tweet/?text=Terraform+AWS+Backup&url=https://github.com/clouddrove/terraform-aws-backup'>
   <img title="Share on Twitter" src="https://user-images.githubusercontent.com/50652676/62817740-4c69db00-bb59-11e9-8a79-3580fbbf6d5c.png" />
 </a>
 
@@ -65,24 +65,24 @@ This module has a few dependencies:
 ## Examples
 
 
-**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-aws-client-vpn/releases).
+**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-aws-backup/releases).
 
 
 ### Simple Example
 Here is an example of how you can use this module in your inventory structure:
   ```hcl
-  module "vpn" {
-      source           = "clouddrove/client-vpn/aws"
-      version          = "0.15.0"
-      name             = "test-vpn"
-      enabled          = true
-      environment      = "example"
-      label_order      = ["name", "environment"]
-      cidr_block       = "172.0.0.0/16"
-      subnet_ids       = module.subnets.public_subnet_id
-      route_cidr       = ["0.0.0.0/0"]
-      route_subnet_ids = ["subnet-xxxxxxxxxxx"]
-      network_cidr     = ["0.0.0.0/0"]
+  module "backup" {
+      source             = "clouddrove/backup/aws"
+      version            = "0.15.0"
+      name               = "clouddrove"
+      environment        = "test"
+      label_order        = ["name", "environment"]
+      schedule           = "cron(0 12 * * ? *)"
+      start_window       = "60"
+      completion_window  = "120"
+      cold_storage_after = "30"
+      delete_after       = "180"
+      backup_resources   = [module.efs.arn]
     }
   ```
 
@@ -96,27 +96,38 @@ Here is an example of how you can use this module in your inventory structure:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
-| cidr\_block | Client VPN CIDR | `string` | `""` | no |
+| backup\_resources | An array of strings that either contain Amazon Resource Names (ARNs) or match patterns of resources to assign to a backup plan | `list(string)` | `[]` | no |
+| cold\_storage\_after | Specifies the number of days after creation that a recovery point is moved to cold storage | `string` | `null` | no |
+| completion\_window | The amount of time AWS Backup attempts a backup before canceling the job and returning an error. Must be at least 60 minutes greater than `start_window` | `string` | `null` | no |
+| copy\_action\_cold\_storage\_after | For copy operation, specifies the number of days after creation that a recovery point is moved to cold storage | `number` | `null` | no |
+| copy\_action\_delete\_after | For copy operation, specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `copy_action_cold_storage_after` | `number` | `null` | no |
+| delete\_after | Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `cold_storage_after` | `string` | `null` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
-| enabled | Client VPN Name | `bool` | `true` | no |
+| destination\_vault\_arn | An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup | `string` | `null` | no |
+| enable\_continuous\_backup | Enable continuous backups for supported resources. | `bool` | `null` | no |
+| enabled | backup Name | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| iam\_role\_enabled | Should we create a new Iam Role and Policy Attachment | `bool` | `true` | no |
+| kms\_key\_arn | The server-side encryption key that is used to protect your backups | `string` | `null` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
-| logs\_retention | Retention in days for CloudWatch Log Group | `number` | `365` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
-| name | Client VPN Name | `string` | `""` | no |
-| network\_cidr | Client Network CIDR | `list(any)` | `[]` | no |
-| organization\_name | Name of organization to use in private certificate | `string` | `"clouddrove.com"` | no |
-| repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-client-vpn"` | no |
-| route\_cidr | Client Route CIDR | `list(any)` | `[]` | no |
-| route\_subnet\_ids | Client Route Subnet Ids | `list(any)` | `[]` | no |
-| subnet\_ids | Subnet ID to associate clients | `list(string)` | `[]` | no |
+| name | backup Name | `string` | `""` | no |
+| plan\_enabled | Should we create a new Plan | `bool` | `true` | no |
+| plan\_name\_suffix | The string appended to the plan name | `string` | `null` | no |
+| repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-backup"` | no |
+| schedule | A CRON expression specifying when AWS Backup initiates a backup job | `string` | `null` | no |
+| selection\_tags | An array of tag condition objects used to filter resources based on tags for assigning to a backup plan | <pre>list(object({<br>    type  = string<br>    key   = string<br>    value = string<br>  }))</pre> | `[]` | no |
+| start\_window | The amount of time in minutes before beginning a backup. Minimum value is 60 minutes | `string` | `null` | no |
+| target\_iam\_role\_name | Override target IAM Role Name | `string` | `null` | no |
+| target\_vault\_name | Override target Vault Name | `string` | `null` | no |
+| vault\_enabled | Should we create a new Vault | `bool` | `true` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| cert | A mapping of tags to assign to the certificate. |
-| key | A mapping of tags to assign to the key. |
+| arn | A mapping of tags to assign to the certificate. |
+| id | A mapping of tags to assign to the key. |
 | tags | A mapping of tags to assign to the resource. |
 
 
@@ -133,9 +144,9 @@ You need to run the following command in the testing folder:
 
 
 ## Feedback 
-If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-client-vpn/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
+If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-backup/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
-If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-client-vpn)!
+If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-backup)!
 
 ## About us
 
