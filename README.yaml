@@ -40,15 +40,14 @@ usage: |-
     module "backup" {
         source             = "clouddrove/backup/aws"
         version            = "0.15.0"
-        name               = "test"
-        environment        = "dev"
-        label_order        = ["name" , "environment"]
+        name               = "clouddrove"
+        environment        = "test"
+        label_order        = ["name", "environment"]
         schedule           = "cron(0 12 * * ? *)"
         start_window       = "60"
         completion_window  = "120"
         cold_storage_after = "30"
         delete_after       = "180"
-        backup_resources   = [module.efs.arn ]
-
-}
+        backup_resources   = [module.efs.arn]
+      }
     ```

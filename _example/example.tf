@@ -35,45 +35,6 @@ module "subnets" {
   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
 }
 
-module "iam-role" {
-  source = "clouddrove/iam-role/aws"
-
-  name        = "iam"
-  environment = "test"
-  label_order = ["environment", "name"]
-
-  assume_role_policy = data.aws_iam_policy_document.default.json
-
-  policy_enabled = true
-  policy         = data.aws_iam_policy_document.iam-policy.json
-}
-
-data "aws_iam_policy_document" "default" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "iam-policy" {
-  statement {
-    actions = [
-      "ssm:UpdateInstanceInformation",
-      "ssmmessages:CreateControlChannel",
-      "ssmmessages:CreateDataChannel",
-      "ssmmessages:OpenControlChannel",
-    "ssmmessages:OpenDataChannel"]
-    effect    = "Allow"
-    resources = ["*"]
-  }
-}
-
-
-
 
 module "efs" {
   source = "clouddrove/efs/aws"
@@ -93,8 +54,8 @@ module "efs" {
 module "backup" {
   source = "./.."
 
-  name               = "test"
-  environment        = "cd"
+  name               = "clouddrove"
+  environment        = "test"
   label_order        = ["name", "environment"]
   schedule           = "cron(0 12 * * ? *)"
   start_window       = "60"
