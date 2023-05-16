@@ -48,7 +48,7 @@ variable "managedby" {
 
 variable "kms_key_arn" {
   type        = string
-  default     = null
+  default     = ""
   description = "The server-side encryption key that is used to protect your backups"
 
 }
