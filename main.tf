@@ -1,6 +1,6 @@
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   enabled     = var.enabled
   name        = var.name
@@ -64,40 +64,62 @@ resource "aws_backup_plan" "default" {
   tags = module.labels.tags
 }
 
+
 data "aws_iam_policy_document" "assume_role" {
   count = local.iam_role_enabled ? 1 : 0
 
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    effect = "Allow"
 
     principals {
-      type        = "Service"
-      identifiers = ["backup.amazonaws.com"]
+      type        = "AWS"
+      identifiers = ["*"]
     }
+
+    actions = [
+      "backup:DescribeBackupVault",
+      "backup:DeleteBackupVault",
+      "backup:PutBackupVaultAccessPolicy",
+      "backup:DeleteBackupVaultAccessPolicy",
+      "backup:GetBackupVaultAccessPolicy",
+      "backup:StartBackupJob",
+      "backup:GetBackupVaultNotifications",
+      "backup:PutBackupVaultNotifications",
+    ]
+
+    resources = [join("", aws_backup_vault.default.*.arn)]
   }
 }
 
+resource "aws_backup_vault_policy" "example" {
+  count = var.aws_backup_vault_policy_enabled ? 1 : 0
+
+  backup_vault_name = join("", aws_backup_vault.default.*.name)
+  policy            = element(data.aws_iam_policy_document.assume_role.*.json, count.index)
+}
+
 resource "aws_iam_role" "default" {
-  count              = local.iam_role_enabled ? 1 : 0
+  count = local.iam_role_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
+
   name               = var.target_iam_role_name == null ? module.labels.id : var.target_iam_role_name
-  assume_role_policy = join("", data.aws_iam_policy_document.assume_role.*.json)
+  assume_role_policy = element(data.aws_iam_policy_document.assume_role.*.json, count.index)
   tags               = module.labels.tags
 }
 
 data "aws_iam_role" "existing" {
   count = local.enabled && var.iam_role_enabled == false ? 1 : 0
-  name  = module.labels.id
+
+  name = module.labels.id
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  count      = local.iam_role_enabled ? 1 : 0
+  count      = local.iam_role_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
   role       = join("", aws_iam_role.default.*.name)
 }
 
 resource "aws_backup_selection" "default" {
-  count        = local.plan_enabled ? 1 : 0
+  count        = local.plan_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
   name         = module.labels.id
   iam_role_arn = join("", var.iam_role_enabled ? aws_iam_role.default.*.arn : data.aws_iam_role.existing.*.arn)
   plan_id      = join("", aws_backup_plan.default.*.id)
@@ -111,3 +133,4 @@ resource "aws_backup_selection" "default" {
     }
   }
 }
+
