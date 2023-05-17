@@ -19,11 +19,11 @@
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
 </a>
-<a href="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/tfsec.yml">
-  <img src="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+<a href="https://github.com/clouddrove/terraform-aws-backup/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-backup/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
 </a>
-<a href="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/terraform.yml">
-  <img src="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
+<a href="https://github.com/clouddrove/terraform-aws-backup/actions/workflows/terraform.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-backup/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
 </a>
 
 
