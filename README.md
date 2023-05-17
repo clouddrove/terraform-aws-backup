@@ -19,6 +19,12 @@
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
 </a>
+<a href="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+</a>
+<a href="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/terraform.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-buckup/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
+</a>
 
 
 </p>
@@ -51,7 +57,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 This module has a few dependencies: 
 
-- [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -96,6 +102,7 @@ Here is an example of how you can use this module in your inventory structure:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
+| aws\_backup\_vault\_policy\_enabled | The backup vault access policy document in JSON format. | `bool` | `true` | no |
 | backup\_resources | An array of strings that either contain Amazon Resource Names (ARNs) or match patterns of resources to assign to a backup plan | `list(string)` | `[]` | no |
 | cold\_storage\_after | Specifies the number of days after creation that a recovery point is moved to cold storage | `string` | `null` | no |
 | completion\_window | The amount of time AWS Backup attempts a backup before canceling the job and returning an error. Must be at least 60 minutes greater than `start_window` | `string` | `null` | no |
@@ -103,12 +110,12 @@ Here is an example of how you can use this module in your inventory structure:
 | copy\_action\_delete\_after | For copy operation, specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `copy_action_cold_storage_after` | `number` | `null` | no |
 | delete\_after | Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `cold_storage_after` | `string` | `null` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
-| destination\_vault\_arn | An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup | `string` | `null` | no |
-| enable\_continuous\_backup | Enable continuous backups for supported resources. | `bool` | `null` | no |
+| destination\_vault\_arn | An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup | `string` | `""` | no |
+| enable\_continuous\_backup | Enable continuous backups for supported resources. | `bool` | `false` | no |
 | enabled | backup Name | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | iam\_role\_enabled | Should we create a new Iam Role and Policy Attachment | `bool` | `true` | no |
-| kms\_key\_arn | The server-side encryption key that is used to protect your backups | `string` | `null` | no |
+| kms\_key\_arn | The server-side encryption key that is used to protect your backups | `string` | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
 | name | backup Name | `string` | `""` | no |
@@ -127,6 +134,7 @@ Here is an example of how you can use this module in your inventory structure:
 | Name | Description |
 |------|-------------|
 | arn | A mapping of tags to assign to the certificate. |
+| backup\_id | Backup Selection identifier. |
 | id | A mapping of tags to assign to the key. |
 | tags | A mapping of tags to assign to the resource. |
 
