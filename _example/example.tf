@@ -135,7 +135,7 @@ module "backup" {
   start_window          = "60"
   completion_window     = "120"
   cold_storage_after    = "30"
-  destination_vault_arn = "arn:aws:backup:eu-west-2:924144197303:backup-vault:Default"
+  destination_vault_arn = "arn:aws:backup:eu-west-2:xxxxxxxxxxxx:backup-vault:Default"
   delete_after          = "180"
   backup_resources      = [module.efs.arn]
   kms_key_arn           = module.kms_key.key_arn
