@@ -108,7 +108,7 @@ variable "selection_tags" {
 
 variable "destination_vault_arn" {
   type        = string
-  default     = null
+  default     = ""
   description = "An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup"
 
 }
@@ -171,7 +171,13 @@ variable "target_iam_role_name" {
 
 variable "enable_continuous_backup" {
   type        = bool
-  default     = null
+  default     = false
   description = "Enable continuous backups for supported resources."
+
+}
+variable "aws_backup_vault_policy_enabled" {
+  type        = bool
+  default     = true
+  description = ""
 
 }

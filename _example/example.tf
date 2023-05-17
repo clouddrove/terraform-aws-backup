@@ -123,20 +123,21 @@ data "aws_iam_policy_document" "iam-policy" {
 module "backup" {
   source = "./.."
 
-  name        = "clouddrove"
+  name        = "backup"
   environment = "example"
   label_order = ["name", "environment"]
 
-  enabled            = true
-  vault_enabled      = true
-  plan_enabled       = true
-  iam_role_enabled   = true
-  schedule           = "cron(0 12 * * ? *)"
-  start_window       = "60"
-  completion_window  = "120"
-  cold_storage_after = "30"
-  delete_after       = "180"
-  backup_resources   = [module.efs.arn]
-  kms_key_arn        = module.kms_key.key_arn
+  enabled               = true
+  vault_enabled         = true
+  plan_enabled          = true
+  iam_role_enabled      = true
+  schedule              = "cron(0 12 * * ? *)"
+  start_window          = "60"
+  completion_window     = "120"
+  cold_storage_after    = "30"
+  destination_vault_arn = "arn:aws:backup:eu-west-2:924144197303:backup-vault:Default"
+  delete_after          = "180"
+  backup_resources      = [module.efs.arn]
+  kms_key_arn           = module.kms_key.key_arn
 
 }
