@@ -178,6 +178,6 @@ variable "enable_continuous_backup" {
 variable "aws_backup_vault_policy_enabled" {
   type        = bool
   default     = true
-  description = ""
+  description = "The backup vault access policy document in JSON format."
 
 }
