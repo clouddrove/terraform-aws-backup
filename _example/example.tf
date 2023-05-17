@@ -51,7 +51,7 @@ module "ssh" {
 
 module "efs" {
   source  = "clouddrove/efs/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name        = "efs"
   environment = "example"
