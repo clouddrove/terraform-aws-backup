@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   vpc_enabled     = true
   enable_flow_log = false
@@ -135,7 +135,7 @@ module "backup" {
   start_window          = "60"
   completion_window     = "120"
   cold_storage_after    = "30"
-  destination_vault_arn = "arn:aws:backup:eu-west-2:xxxxxxxxxxxx:backup-vault:Default"
+  destination_vault_arn = ""
   delete_after          = "180"
   backup_resources      = [module.efs.arn]
   kms_key_arn           = module.kms_key.key_arn
