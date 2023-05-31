@@ -6,68 +6,27 @@ on:
     types: [labeled]
 
 jobs:
-  DNS:
-    name: 'Terratest for DNS'
+  Terratest:
+    name: 'terratest'
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout Repo
-        uses: actions/checkout@master
-        # Setup gcloud CLI
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
 
-      - name: Auth Gcp
-        uses: google-github-actions/auth@v1
+      - name: 'Configure AWS Credentials'
+        uses: clouddrove/configure-aws-credentials@v1
         with:
-          credentials_json: ${{ secrets.GKE_KEY }}
+          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
+          aws-region: us-east-2
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: 'Terratest Generate Certificate DNS'
-        if: ${{ github.event.label.name == 'terratest' }}
+      - name: 'terratest'
         uses: 'clouddrove/github-actions@v9.0.2'
         with:
           actions_subcommand: 'terratest'
-          tf_actions_working_dir: _test/generate-certificate-dns
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Slack Notification'
-        uses: clouddrove/action-slack@v2
-        with:
-          status: ${{ job.status }}
-          fields: repo,author
-          author_name: 'CloudDrove'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_TERRAFORM }} # required
-        if: always()
-
-  Email:
-    name: 'Terratest for Email'
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout Repo
-        uses: actions/checkout@master
-        # Setup gcloud CLI
-
-      - name: Auth Gcp
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GKE_KEY }}
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: 'Terratest Generate Certificate Email'
-        if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v9.0.1'
-        with:
-          actions_subcommand: 'terratest'
-          tf_actions_working_dir: _test/generate-certificate-email
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if: ${{ github.event.label.name == 'terratest' }}
+          tf_actions_working_dir: '_test'
 
       - name: 'Slack Notification'
         uses: clouddrove/action-slack@v2
