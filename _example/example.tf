@@ -10,7 +10,7 @@ module "vpc" {
   enable_flow_log = false
 
   name        = "vpc"
-  environment = "example"
+  environment = "test"
   label_order = ["name", "environment"]
 
   cidr_block = "10.0.0.0/16"
@@ -24,7 +24,7 @@ module "subnets" {
   nat_gateway_enabled = true
 
   name        = "subnets"
-  environment = "example"
+  environment = "test"
   label_order = ["name", "environment"]
 
   availability_zones = ["eu-west-1a", "eu-west-1b"]
@@ -38,7 +38,7 @@ module "subnets" {
 
 module "ssh" {
   source      = "clouddrove/security-group/aws"
-  version     = "1.3.0"
+  version     = "2.0.0"
   name        = "ssh"
   environment = "test"
   label_order = ["name", "environment"]
@@ -54,7 +54,7 @@ module "efs" {
   version = "1.3.1"
 
   name        = "efs"
-  environment = "example"
+  environment = "test"
   label_order = ["name", "environment"]
 
   creation_token     = ""
@@ -70,7 +70,7 @@ module "kms_key" {
   version = "1.3.0"
 
   name                    = "kms"
-  environment             = "example"
+  environment             = "test"
   label_order             = ["environment", "name"]
   enabled                 = true
   description             = "KMS key for ec2"
@@ -124,7 +124,7 @@ module "backup" {
   source = "./.."
 
   name        = "backup"
-  environment = "example"
+  environment = "test"
   label_order = ["name", "environment"]
 
   enabled               = true
