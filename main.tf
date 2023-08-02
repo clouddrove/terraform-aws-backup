@@ -30,7 +30,7 @@ resource "aws_backup_plan" "default" {
 
   rule {
     rule_name                = module.labels.id
-    target_vault_name        = var.target_vault_name == null ? join("", aws_backup_vault.default.*.name) : var.target_vault_name
+    target_vault_name        = var.target_vault_name == null ? join("", aws_backup_vault.default[*].name) : var.target_vault_name
     schedule                 = var.schedule
     start_window             = var.start_window
     completion_window        = var.completion_window
@@ -87,22 +87,22 @@ data "aws_iam_policy_document" "assume_role" {
       "backup:PutBackupVaultNotifications",
     ]
 
-    resources = [join("", aws_backup_vault.default.*.arn)]
+    resources = [join("", aws_backup_vault.default[*].arn)]
   }
 }
 
 resource "aws_backup_vault_policy" "example" {
   count = var.aws_backup_vault_policy_enabled ? 1 : 0
 
-  backup_vault_name = join("", aws_backup_vault.default.*.name)
-  policy            = element(data.aws_iam_policy_document.assume_role.*.json, count.index)
+  backup_vault_name = join("", aws_backup_vault.default[*].name)
+  policy            = element(data.aws_iam_policy_document.assume_role[*].json, count.index)
 }
 
 resource "aws_iam_role" "default" {
   count = local.iam_role_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
 
   name               = var.target_iam_role_name == null ? module.labels.id : var.target_iam_role_name
-  assume_role_policy = element(data.aws_iam_policy_document.assume_role.*.json, count.index)
+  assume_role_policy = element(data.aws_iam_policy_document.assume_role[*].json, count.index)
   tags               = module.labels.tags
 }
 
@@ -115,14 +115,14 @@ data "aws_iam_role" "existing" {
 resource "aws_iam_role_policy_attachment" "default" {
   count      = local.iam_role_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
-  role       = join("", aws_iam_role.default.*.name)
+  role       = join("", aws_iam_role.default[*].name)
 }
 
 resource "aws_backup_selection" "default" {
   count        = local.plan_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
   name         = module.labels.id
-  iam_role_arn = join("", var.iam_role_enabled ? aws_iam_role.default.*.arn : data.aws_iam_role.existing.*.arn)
-  plan_id      = join("", aws_backup_plan.default.*.id)
+  iam_role_arn = join("", var.iam_role_enabled ? aws_iam_role.default[*].arn : data.aws_iam_role.existing[*].arn)
+  plan_id      = join("", aws_backup_plan.default[*].id)
   resources    = var.backup_resources
   dynamic "selection_tag" {
     for_each = var.selection_tags
