@@ -13,17 +13,14 @@
 
 <p align="center">
 
-<a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v1.1.7-green" alt="Terraform">
+<a href="https://github.com/clouddrove/terraform-aws-backup/releases/latest">
+  <img src="https://img.shields.io/github/release/clouddrove/terraform-aws-backup.svg" alt="Latest Release">
+</a>
+<a href="https://github.com/terraform-aws-backup/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-backup/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
-</a>
-<a href="https://github.com/terraform-aws-backup/actions/workflows/tfsec.yml">
-  <img src="https://github.com/terraform-aws-backup/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
-</a>
-<a href="https://github.com/terraform-aws-backup/actions/workflows/terraform.yml">
-  <img src="https://github.com/terraform-aws-backup/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
 </a>
 
 
@@ -56,12 +53,6 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 ## Prerequisites
 
 This module has a few dependencies: 
-
-- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
-- [Go](https://golang.org/doc/install)
-- [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
-- [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
-
 
 
 
@@ -101,7 +92,6 @@ Here is an example of how you can use this module in your inventory structure:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
 | aws\_backup\_vault\_policy\_enabled | The backup vault access policy document in JSON format. | `bool` | `true` | no |
 | backup\_resources | An array of strings that either contain Amazon Resource Names (ARNs) or match patterns of resources to assign to a backup plan | `list(string)` | `[]` | no |
 | cold\_storage\_after | Specifies the number of days after creation that a recovery point is moved to cold storage | `string` | `null` | no |
@@ -109,7 +99,6 @@ Here is an example of how you can use this module in your inventory structure:
 | copy\_action\_cold\_storage\_after | For copy operation, specifies the number of days after creation that a recovery point is moved to cold storage | `number` | `null` | no |
 | copy\_action\_delete\_after | For copy operation, specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `copy_action_cold_storage_after` | `number` | `null` | no |
 | delete\_after | Specifies the number of days after creation that a recovery point is deleted. Must be 90 days greater than `cold_storage_after` | `string` | `null` | no |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
 | destination\_vault\_arn | An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup | `string` | `""` | no |
 | enable\_continuous\_backup | Enable continuous backups for supported resources. | `bool` | `false` | no |
 | enabled | backup Name | `bool` | `true` | no |
