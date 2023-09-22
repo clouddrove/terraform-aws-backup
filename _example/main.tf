@@ -43,7 +43,7 @@ module "ssh" {
   label_order = ["name", "environment"]
 
   vpc_id        = module.vpc.vpc_id
-  allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+  cidr_blocks   = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
   allowed_ports = [22]
 }
 
