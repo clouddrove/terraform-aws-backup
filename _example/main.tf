@@ -43,8 +43,15 @@ module "ssh" {
   label_order = ["name", "environment"]
 
   vpc_id        = module.vpc.vpc_id
-  cidr_blocks   = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
-  allowed_ports = [22]
+
+  new_sg_ingress_rules_with_cidr_blocks = [{
+    rule_count  = 1
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+    description = "Allow ssh traffic."
+    },
 }
 
 
