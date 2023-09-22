@@ -51,7 +51,7 @@ module "ssh" {
     to_port     = 22
     cidr_blocks = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
     description = "Allow ssh traffic."
-    },
+    }]
 }
 
 
