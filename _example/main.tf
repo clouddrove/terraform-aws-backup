@@ -68,7 +68,7 @@ module "efs" {
   availability_zones = ["eu-west-1a", "eu-west-1b"]
   vpc_id             = module.vpc.vpc_id
   subnets            = module.subnets.public_subnet_id
-  security_groups    = [module.ssh.security_group_ids]
+  security_groups    = [module.ssh.security_group_id]
 }
 
 module "kms_key" {
