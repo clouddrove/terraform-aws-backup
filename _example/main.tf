@@ -42,9 +42,16 @@ module "ssh" {
   environment = "test"
   label_order = ["name", "environment"]
 
-  vpc_id        = module.vpc.vpc_id
-  allowed_ip    = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
-  allowed_ports = [22]
+  vpc_id = module.vpc.vpc_id
+
+  new_sg_ingress_rules_with_cidr_blocks = [{
+    rule_count  = 1
+    from_port   = 22
+    protocol    = "tcp"
+    to_port     = 22
+    cidr_blocks = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+    description = "Allow ssh traffic."
+  }]
 }
 
 
@@ -61,12 +68,12 @@ module "efs" {
   availability_zones = ["eu-west-1a", "eu-west-1b"]
   vpc_id             = module.vpc.vpc_id
   subnets            = module.subnets.public_subnet_id
-  security_groups    = [module.ssh.security_group_ids]
+  security_groups    = [module.ssh.security_group_id]
 }
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name                    = "kms"
   environment             = "test"
