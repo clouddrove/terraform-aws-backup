@@ -64,14 +64,14 @@ module "ssh" {
 #}
 
 module "efs" {
-  source                    = "clouddrove/efs/aws"
-  name                      = "efs"
-  environment               = "test"
-  creation_token            = "changeme"
-  availability_zones        = ["eu-west-1a", "eu-west-1b"]
-    vpc_id             = module.vpc.vpc_id
-    subnets            = module.subnets.public_subnet_id
-    security_groups    = [module.ssh.security_group_id]
+  source             = "clouddrove/efs/aws"
+  name               = "efs"
+  environment        = "test"
+  creation_token     = "changeme"
+  availability_zones = ["eu-west-1a", "eu-west-1b"]
+  vpc_id             = module.vpc.vpc_id
+  subnets            = module.subnets.public_subnet_id
+  security_groups    = [module.ssh.security_group_id]
 
   replication_configuration_destination = {
     region                 = "eu-west-2"
