@@ -51,18 +51,6 @@ module "ssh" {
   }]
 }
 
-
-#module "efs" {
-#  source  = "clouddrove/efs/aws"
-#  version = "2.0.0"
-#
-#  name               = "${local.name}-efs"
-#  environment        = local.environment
-#  creation_token     = ""
-#  availability_zones = ""
-
-#}
-
 module "efs" {
   source             = "clouddrove/efs/aws"
   name               = "efs"
@@ -126,5 +114,4 @@ module "backup" {
   delete_after          = "180"
   backup_resources      = [module.efs.arn]
   kms_key_arn           = module.kms_key.key_arn
-
 }
