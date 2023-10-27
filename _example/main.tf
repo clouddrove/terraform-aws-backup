@@ -53,8 +53,9 @@ module "ssh" {
 
 module "efs" {
   source             = "clouddrove/efs/aws"
-  name               = "efs"
-  environment        = "test"
+  version            = "2.0.0"
+  name               = "${local.name}-efs"
+  environment        = local.environment
   creation_token     = "changeme"
   availability_zones = ["eu-west-1a", "eu-west-1b"]
   vpc_id             = module.vpc.vpc_id
