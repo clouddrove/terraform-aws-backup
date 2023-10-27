@@ -65,7 +65,7 @@ resource "aws_backup_plan" "default" {
 }
 
 
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "aws_backup_vault_policy" {
   count = local.iam_role_enabled ? 1 : 0
 
   statement {
@@ -95,7 +95,21 @@ resource "aws_backup_vault_policy" "example" {
   count = var.aws_backup_vault_policy_enabled ? 1 : 0
 
   backup_vault_name = join("", aws_backup_vault.default[*].name)
-  policy            = element(data.aws_iam_policy_document.assume_role[*].json, count.index)
+  policy            = element(data.aws_iam_policy_document.aws_backup_vault_policy[*].json, count.index)
+}
+
+data "aws_iam_policy_document" "assume_role" {
+  count = local.iam_role_enabled && var.aws_backup_vault_policy_enabled == false ? 1 : 0
+
+  statement {
+    sid     = "AWSBackupAssumeRole"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["backup.amazonaws.com"]
+    }
+  }
 }
 
 resource "aws_iam_role" "default" {
