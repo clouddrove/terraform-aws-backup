@@ -147,4 +147,3 @@ resource "aws_backup_selection" "default" {
     }
   }
 }
-
