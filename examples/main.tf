@@ -53,7 +53,7 @@ module "ssh" {
 
 module "efs" {
   source             = "clouddrove/efs/aws"
-  version            = "2.0.0"
+  version            = "2.0.1"
   name               = "${local.name}-efs"
   environment        = local.environment
   creation_token     = "changeme"
