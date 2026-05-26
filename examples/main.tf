@@ -9,7 +9,7 @@ locals {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "2.0.0"
+  version = "2.0.5"
 
   name            = "${local.name}-vpc"
   environment     = local.environment
@@ -20,7 +20,7 @@ module "vpc" {
 
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "2.0.1"
+  version = "2.0.2"
 
   nat_gateway_enabled = true
   name                = "${local.name}-subnets"
@@ -36,7 +36,7 @@ module "subnets" {
 
 module "ssh" {
   source  = "clouddrove/security-group/aws"
-  version = "2.0.0"
+  version = "2.0.2"
 
   name        = "${local.name}-ssh"
   environment = local.environment
@@ -53,7 +53,7 @@ module "ssh" {
 
 module "efs" {
   source             = "clouddrove/efs/aws"
-  version            = "2.0.0"
+  version            = "2.0.1"
   name               = "${local.name}-efs"
   environment        = local.environment
   creation_token     = "changeme"
@@ -70,7 +70,7 @@ module "efs" {
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "1.3.1"
+  version = "1.3.3"
 
   name                    = "${local.name}-kms"
   environment             = local.environment
