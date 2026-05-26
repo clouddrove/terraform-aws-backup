@@ -34,6 +34,12 @@ variable "managedby" {
   description = "ManagedBy, eg 'CloudDrove'."
 }
 
+variable "extra_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Additional tags (e.g. map(`CostCenter`,`platform`))."
+}
+
 variable "kms_key_arn" {
   type        = string
   default     = ""
