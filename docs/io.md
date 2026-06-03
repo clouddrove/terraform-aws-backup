@@ -13,6 +13,7 @@
 | enable\_continuous\_backup | Enable continuous backups for supported resources. | `bool` | `false` | no |
 | enabled | backup Name | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| extra\_tags | Additional tags (e.g. map(`CostCenter`,`platform`)). | `map(string)` | `{}` | no |
 | iam\_role\_enabled | Should we create a new Iam Role and Policy Attachment | `bool` | `true` | no |
 | kms\_key\_arn | The server-side encryption key that is used to protect your backups | `string` | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | <pre>[<br>  "name",<br>  "environment"<br>]</pre> | no |
