@@ -70,7 +70,7 @@ module "efs" {
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "1.3.3"
+  version = "1.3.4"
 
   name                    = "${local.name}-kms"
   environment             = local.environment
